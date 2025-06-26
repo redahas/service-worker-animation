@@ -26,7 +26,7 @@ export function GridAnimation() {
   const [config, setConfig] = useState<GridConfig>(defaultConfig);
   const isDrawing = useRef<boolean>(false);
   const grid = useRef<Cell[][]>([]);
-  const animationFrameId = useRef<number>();
+  const animationFrameId = useRef<number>(0);
   const frameCount = useRef(0);
   const lastTime = useRef(performance.now());
 
@@ -64,7 +64,9 @@ export function GridAnimation() {
     // Start animation
     function animate() {
       updateSand();
-      drawGrid(ctx);
+      if (ctx) {
+        drawGrid(ctx);
+      }
       animationFrameId.current = requestAnimationFrame(animate);
     }
 
@@ -75,7 +77,7 @@ export function GridAnimation() {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, []);
+  }, [config.cellSize, config.height, config.width]);
 
   function updateSand() {
     const gridData = grid.current;
